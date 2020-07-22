@@ -1,0 +1,72 @@
+<html>
+	<head>
+	  <script src="//client-api.arkoselabs.com/v2/INSERT_PUBLIC_KEY/api.js" data-callback="setupEnforcement" async defer></script>
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+	
+
+	  <button id="enforcement-trigger">
+	    Load Challenge
+	  </button>
+	  
+	  <pre></pre>
+	
+
+	  <script>
+	   
+	    function setupEnforcement(myEnforcement) {
+	      
+	      myEnforcement.setConfig({
+	        
+	        selector: '#enforcement-trigger',
+	        
+	        onCompleted: function(response) {
+	          
+	          var token = response.token.toString();
+	
+
+	          var xhr = new XMLHttpRequest();
+	
+
+	          xhr.onreadystatechange = function () {
+	
+
+	          // Only run if the request is complete
+	          if (xhr.readyState !== 4) return;
+	
+
+	          // Process our return data
+	          if (xhr.status >= 200 && xhr.status < 300) {
+	            
+	            document.getElementById('enforcement-trigger').remove();
+	
+
+	            validateResponse = JSON.parse(xhr.responseText);
+	
+
+	            document.getElementsByTagName("pre")[0].innerHTML = JSON.stringify(validateResponse,undefined,4); 
+	
+
+	          } else {
+	
+
+	            console.log('The request failed!', xhr.responseText);
+	          }
+	
+
+	        };
+	
+
+	          xhr.open("GET", "validate-token.php?fc-token=" + token, true);
+	          xhr.send(); 
+	
+
+	        }
+	      });
+	    }
+	
+
+	  </script>
+	</body>
+	</html>
